@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>onerror</title>
+    <script src="logger.js"></script>
+    <script defer src="division.js"></script>
+    <style>
+      body {
+        margin: 4rem;
+      }
+      pre {
+        background: #0001;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1>onerror</h1>
+      <input id='left' type='number' placeholder='jagatav'>
+      <span>÷<span>
+      <input id='right' type='number' placeholder='jagatis'>
+      <button id='button'>=</button>
+      <input id='result' type='number' disabled placeholder='tulemus'>
+    </center>
+    <pre id="stack"></pre>
+    <pre id="error"></pre>
+  </body>
+</html>
