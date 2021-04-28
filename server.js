@@ -1,5 +1,12 @@
 const http = require("http");
 const uncaught = require("uncaught");
+const mail = require("./mail");
+
+const RECIPIENT = process.env.RECIPIENT;
+if (!RECIPIENT) {
+  console.error("RECIPIENT environment variable empty");
+  process.exit(1);
+}
 
 uncaught.start();
 uncaught.addListener(function (error) {
@@ -7,7 +14,8 @@ uncaught.addListener(function (error) {
   Object.getOwnPropertyNames(error).forEach(
     (prop) => (remap[prop] = error[prop])
   );
-  console.error("SERVER ERROR", remap);
+  const content = JSON.stringify(obj, null, 2);
+  mail.send(RECIPIENT, "server error", content);
 });
 
 const listener = (req, res) => {
@@ -20,8 +28,13 @@ const listener = (req, res) => {
   let body = "";
   req.on("data", (chunk) => (body += chunk));
   req.on("end", () => {
-    console.warn("CLIENT ERROR", JSON.parse(body));
-    throw Error("auto error");
+    let content;
+    try {
+      content = JSON.stringify(JSON.parse(body), null, 2);
+    } finally {
+      content = body;
+    }
+    mail.send(RECIPIENT, "client error", content);
   });
 };
 
